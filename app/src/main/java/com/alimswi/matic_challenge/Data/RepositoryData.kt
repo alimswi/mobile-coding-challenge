@@ -14,10 +14,11 @@ import kotlin.Exception
 class RepositoryData {
    val TAG:String = javaClass.simpleName
 
-    fun getRepositoryData(RepositoryUrl:String?,JsonArrayName:String?,PageNumber:Int?):ArrayList<Repository>{
+    fun getRepositoryData(RepositoryUrl:String?,JsonArrayName:String?,PageNumber:Int?,RecordsInPage:Int?):ArrayList<Repository>{
         try{
             var repositoryList:ArrayList<Repository> = arrayListOf()
-            Fuel.get(RepositoryUrl!!)
+
+            Fuel.get(RepositoryUrl!!+"&page=$PageNumber&per_page=$RecordsInPage")
                 .timeout(100000)
                 .header("Content-Type" to "application/json")
                 .responseJson { request, response, result ->
@@ -25,6 +26,7 @@ class RepositoryData {
                         is Result.Failure -> {
                             val ex = result.getException()
                             Log.e("NOT#VALID", "$ex")
+                            return@responseJson
                         }
                         is Result.Success -> {
                             val data = result.get()

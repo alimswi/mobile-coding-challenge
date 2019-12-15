@@ -10,9 +10,9 @@ import com.alimswi.matic_challenge.Data.RepositoryData
 import com.alimswi.matic_challenge.Model.Repository
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.coroutines.*
-import java.lang.Exception
 import java.text.SimpleDateFormat
 import java.util.*
+import kotlin.Exception
 import kotlin.collections.ArrayList
 import kotlin.coroutines.CoroutineContext
 
@@ -50,8 +50,21 @@ class MainActivity : AppCompatActivity(),CoroutineScope {
     }
     private suspend fun loadRepositories(repoURl:String?){
         try {
-                    repoList =  repoData.getRepositoryData(repoURl!!,"items",0)
-                    while (repoList.isEmpty()) delay(1)
+                    try {
+                        var pageNumber = 1
+                        val RECORDS_IN_PAGE = 100
+                        //GITHUB  SEARCH IS LIMITED TO 1000 RESULTS PER QUERY,
+                        // SO I LIMITED EACH PAGE TO 100 RECORDS,OVER 10 PAGES
+                        while(pageNumber<11) {
+                            var dat = repoData.getRepositoryData(repoURl!!, "items",pageNumber,RecordsInPage = RECORDS_IN_PAGE)
+                            while (dat.size == 0) delay(1)
+                            repoList.addAll(dat)
+                            pageNumber +=1
+                        }
+                    }
+                    catch (e:Exception){
+                        Log.e(TAG,"LOAD ERROR:"+e.printStackTrace().toString())
+                    }
 
                     repAdapter = RepositoryAdapter(this,repoList)
                     rvMainRepoList.layoutManager = layoutManager
