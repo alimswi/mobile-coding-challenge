@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="main_screen_header_margin">8dp</dimen>
+    <dimen name="repository_card_margin">8dp</dimen>
+    <dimen name="repository_card_min_height">70dp</dimen>
+    <dimen name="repository_card_max_height">100dp</dimen>
+    <dimen name="repository_card_owner_image_padding">4dp</dimen>
+</resources>
