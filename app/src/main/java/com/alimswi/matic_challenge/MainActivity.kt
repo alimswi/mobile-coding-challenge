@@ -3,6 +3,7 @@ package com.alimswi.matic_challenge
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import android.view.View
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.alimswi.matic_challenge.Adapter.RepositoryAdapter
@@ -57,7 +58,11 @@ class MainActivity : AppCompatActivity(),CoroutineScope {
                         // SO I LIMITED EACH PAGE TO 100 RECORDS,OVER 10 PAGES
                         while(pageNumber<11) {
                             var dat = repoData.getRepositoryData(repoURl!!, "items",pageNumber,RecordsInPage = RECORDS_IN_PAGE)
-                            while (dat.size == 0) delay(1)
+                            while (dat.size == 0) {
+                                //Log.i("DELAY","DELAY")
+                                progress_bar.visibility = View.VISIBLE
+                                rvMainRepoList.visibility = View.GONE
+                                delay(1)}
                             repoList.addAll(dat)
                             pageNumber +=1
                         }
@@ -65,7 +70,8 @@ class MainActivity : AppCompatActivity(),CoroutineScope {
                     catch (e:Exception){
                         Log.e(TAG,"LOAD ERROR:"+e.printStackTrace().toString())
                     }
-
+                    progress_bar.visibility = View.GONE
+                    rvMainRepoList.visibility = View.VISIBLE
                     repAdapter = RepositoryAdapter(this,repoList)
                     rvMainRepoList.layoutManager = layoutManager
                     rvMainRepoList.adapter = repAdapter
